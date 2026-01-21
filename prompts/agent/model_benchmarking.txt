@@ -1,0 +1,61 @@
+Evaluate the following Model Benchmarking Analysis for an RL Tool Use Data Generation task.
+
+## Available Tool Definitions
+{tool_definitions}
+
+## Expected Tools (Gold Standard)
+{expected_tools}
+
+## Happy Path (Trainer's Execution)
+{happy_path}
+
+## Model Runs
+{model_runs}
+
+## Auto-Detected Flags
+{detected_flags}
+
+---
+
+Please evaluate the model run categorizations:
+
+1. **For Each "None" Run (Model not broken)**:
+   - Did the model ACTUALLY complete the task?
+   - Check that required tools were called in a valid sequence
+   - Watch for "Fake Pass" where model claimed success without tool calls
+
+2. **For Each "Failed" Run**:
+   - Is the failure category correct?
+   - Use only these categories:
+     - Wrong Parameter
+     - Missing Tool Calls Execution
+     - Hallucinating
+     - Unable to find tools but they exist
+     - Asking for Confirmation
+
+3. **Comment Quality**:
+   - Do comments explain the ROOT CAUSE of failure?
+   - Are they specific enough to be actionable?
+
+Scoring rules:
+- Use a numeric score from **0 to 5** in **0.5** increments.
+- **5** means the criterion fully meets all pass conditions.
+- **0** means the criterion completely fails.
+- Set `overall_score` to the **minimum** of the two criterion scores.
+- Set `overall_pass` to **true only if** `overall_score` is **5**.
+
+Provide your structured JSON evaluation:
+```json
+{
+  "categorization_accuracy": {
+    "score": 0-5,
+    "misclassified_runs": [{"run_id": 1, "claimed": "...", "actual": "...", "reasoning": "..."}]
+  },
+  "comment_quality": {"score": 0-5, "reasoning": "..."},
+  "fake_passes_detected": [],
+  "flags": ["list of any issues found"],
+  "overall_score": 0-5,
+  "overall_pass": true,
+  "summary": "Brief summary of model benchmarking quality"
+}
+```

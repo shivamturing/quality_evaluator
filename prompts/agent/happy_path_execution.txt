@@ -1,0 +1,50 @@
+Evaluate the following Happy Path (Manual Tool Execution) for an RL Tool Use Data Generation task.
+
+## Available Tool Definitions
+{tool_definitions}
+
+## Allowed Tools (Names Only)
+{allowed_tools}
+
+## Expected Tools
+{expected_tools}
+
+## Happy Path Steps (Trainer's Gold Standard Execution)
+{happy_path_steps}
+
+## Auto-Detected Flags
+{detected_flags}
+
+---
+
+Please evaluate this Happy Path against the four criteria:
+1. **Tool Selection**: Are the correct tools used for the task?
+2. **Parameter Accuracy**: Are all parameters accurate with no fabricated values?
+3. **Logical Dependency**: Are steps in the correct order (dependencies first)?
+4. **State Change**: Does the execution achieve the complete goal?
+
+Scoring rules:
+- Use a numeric score from **0 to 5** in **0.5** increments.
+- **5** means the criterion fully meets all pass conditions.
+- **0** means the criterion completely fails.
+- Set `overall_score` to the **minimum** of the four criterion scores.
+- Set `overall_pass` to **true only if** `overall_score` is **5**.
+
+Pay special attention to:
+- Magic IDs (IDs used before retrieval)
+- Redundant tool calls
+- Missing steps for complete task resolution
+
+Provide your structured JSON evaluation:
+```json
+{
+  "tool_selection": {"score": 0-5, "reasoning": "..."},
+  "parameter_accuracy": {"score": 0-5, "reasoning": "..."},
+  "logical_dependency": {"score": 0-5, "reasoning": "..."},
+  "state_change": {"score": 0-5, "reasoning": "..."},
+  "flags": ["list of any flags detected"],
+  "overall_score": 0-5,
+  "overall_pass": true,
+  "summary": "Brief summary of happy path quality"
+}
+```

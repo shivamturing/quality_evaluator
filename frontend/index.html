@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RLToolUseEval - Quality Evaluation Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="header-brand">
+                    <h1>🔧 RLToolUseEval</h1>
+                    <p class="subtitle">RL Tool Use Data Generation Quality Evaluation</p>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Upload Section -->
+            <section class="card upload-section" id="uploadSection">
+                <h2>📤 Load Task</h2>
+                <form id="upload-form">
+                    <div class="form-group" id="reviewer-email-group">
+                        <label for="reviewer-email">Your Email</label>
+                        <div class="reviewer-email-row">
+                            <input type="email" id="reviewer-email" name="reviewer_email" class="form-input"
+                                placeholder="name@turing.com" required>
+                            <button type="button" class="btn btn-secondary btn-small" id="save-email-btn">Save</button>
+                        </div>
+                        <p class="help-text">Use your @turing.com email.</p>
+                        <p class="error-text hidden" id="reviewer-email-error"></p>
+                    </div>
+                    <div class="reviewer-email-saved hidden" id="reviewer-email-saved">
+                        <span id="reviewer-email-saved-text"></span>
+                        <button type="button" class="btn btn-secondary btn-small" id="change-email-btn">Change</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-id-input">Task ID</label>
+                        <div class="reviewer-email-row">
+                            <input type="text" id="task-id-input" name="task_id" class="form-input"
+                                placeholder="task_20260120_135742_171_def30b43_683bdb80" required>
+                            <button type="button" class="btn btn-secondary btn-small" id="fetch-task-btn">Fetch</button>
+                        </div>
+                        <p class="help-text">Fetches config and results from RL Gym.</p>
+                        <p class="error-text hidden" id="task-id-error"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="domain-select">Environment (Domain)</label>
+                        <select id="domain-select" name="domain" class="form-select">
+                            <option value="" selected>✨ Auto-detect from Config</option>
+                            <!-- Populated by JS -->
+                        </select>
+                        <p class="help-text">Select environment manually if config file uses internal/custom names.</p>
+                    </div>
+                    <div class="task-preview hidden" id="task-preview">
+                        <div class="section-title">Fetched Task</div>
+                        <div class="task-preview-body" id="task-preview-body"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="evaluate-btn">
+                        🚀 Evaluate
+                    </button>
+                </form>
+                <div id="progress" class="progress hidden">
+                    <div class="progress-bar"></div>
+                    <span class="progress-text">Evaluating 4 dimensions...</span>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results-section" class="card hidden">
+                <div class="results-header">
+                    <div>
+                        <h2>📊 Evaluation Results</h2>
+                        <span class="task-id" id="task-id-display"></span>
+                        <span class="task-id" id="reviewer-email-display"></span>
+                    </div>
+                    <div class="results-actions">
+                        <button class="btn btn-secondary" id="download-json-btn">
+                            📥 Download JSON
+                        </button>
+                        <button class="btn btn-secondary" id="download-csv-btn">
+                            📥 Download CSV
+                        </button>
+                        <button class="btn btn-primary" id="new-eval-btn">
+                            ➕ New Evaluation
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI Score Summary -->
+                <div class="score-summary" id="score-summary">
+                    <!-- Populated by JS -->
+                </div>
+
+                <!-- Detected Flags -->
+                <div id="flags-section" class="flags-section hidden">
+                    <h3>🚩 Detected Flags</h3>
+                    <div id="flags-list"></div>
+                </div>
+
+                <!-- Dimension Details -->
+                <div id="dimensions-grid" class="dimensions-grid"></div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="footer-title">Evaluating 4 Quality Dimensions</p>
+            <div class="dimensions-list">
+                <span class="dimension-tag">Prompt Quality</span>
+                <span class="dimension-tag">Happy Path Execution</span>
+                <span class="dimension-tag">SQL Verifier Quality</span>
+                <span class="dimension-tag">Model Benchmarking</span>
+            </div>
+        </footer>
+    </div>
+
+    <div class="modal hidden" id="email-modal">
+        <div class="modal-content">
+            <h3>Enter your email to continue</h3>
+            <p class="modal-subtitle">Use your @turing.com email. We will remember it for this browser.</p>
+            <input type="email" id="modal-email-input" class="form-input" placeholder="name@turing.com">
+            <p class="error-text hidden" id="modal-email-error"></p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-primary" id="modal-save-email-btn">Save Email</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+Evaluate the following SQL Verifiers for an RL Tool Use Data Generation task.
+
+## Original Prompt
+{prompt_text}
+
+## SQL Verifiers
+{verifiers}
+
+## Auto-Detected Flags
+{detected_flags}
+
+---
+
+Please evaluate these SQL verifiers against the three criteria:
+1. **Target Accuracy**: Does each query target the specific entity from the prompt?
+2. **State Validation**: Does it validate the actual state change, not just existence?
+3. **Robustness**: Would this query fail if the model did nothing or did the wrong thing?
+
+Scoring rules:
+- Use a numeric score from **0 to 5** in **0.5** increments.
+- **5** means the criterion fully meets all pass conditions.
+- **0** means the criterion completely fails.
+- Set `overall_score` to the **minimum** of the three criterion scores.
+- Set `overall_pass` to **true only if** `overall_score` is **5**.
+
+Response style (brevity required):
+- Keep each reasoning field to **1–2 short sentences**.
+- Focus on the **top 1–2 issues** only; avoid long lists.
+- Keep `summary` to **one sentence**.
+- Include **all valid flags**, but keep each flag short and specific.
+
+For each verifier, consider:
+- Would it return TRUE on the seed/empty database?
+- Does it check ALL requirements from the prompt (and only those)?
+- If a state transition is required, does it verify the old value is gone?
+- Could a model accidentally pass without completing the task?
+- Are there extra constraints that could fail a correct run (overreach)?
+- Do **not** require invariance checks for unrelated entities unless the prompt asks for it.
+
+Provide your structured JSON evaluation:
+```json
+{
+  "target_accuracy": {"score": 0-5, "reasoning": "..."},
+  "state_validation": {"score": 0-5, "reasoning": "..."},
+  "robustness": {"score": 0-5, "reasoning": "..."},
+  "flags": ["list of any issues found"],
+  "overall_score": 0-5,
+  "overall_pass": true,
+  "summary": "Brief summary of SQL verifier quality"
+}
+```

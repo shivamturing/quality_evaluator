@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RLToolUseEval - Admin</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="header-brand">
+                    <h1>🔧 RLToolUseEval Admin</h1>
+                    <p class="subtitle">Review who evaluated which task</p>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="card">
+                <div class="results-header">
+                    <div>
+                        <h2>🧾 Evaluation Log</h2>
+                        <span class="task-id" id="admin-summary">Loading...</span>
+                    </div>
+                    <div class="results-actions">
+                        <button class="btn btn-secondary" id="refresh-admin-btn">🔄 Refresh</button>
+                        <button class="btn btn-secondary" id="download-admin-json-btn">📥 Download JSON</button>
+                    </div>
+                </div>
+
+                <div class="admin-grouped" id="admin-grouped">
+                    <!-- Grouped by reviewer -->
+                </div>
+
+                <div id="admin-table" class="admin-table">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/admin.js"></script>
+</body>
+
+</html>
