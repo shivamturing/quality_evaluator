@@ -60,11 +60,12 @@ def get_diversity_report(tasks):
         tasks: List of task dicts with 'task_id' and 'golden_trajectory' fields
     
     Returns:
-        Tuple of (total_tool_analysis, task_specific_tool_analysis, individual_tool_counts)
+        Tuple of (total_tool_analysis, task_specific_tool_analysis, individual_tool_counts, task_data)
     """
     # Initialize tracking dictionaries
     sequential_counts = defaultdict(lambda: {'count': 0, 'task_ids': []})
     individual_tool_counts = defaultdict(int)  # Count individual tool calls
+    task_data_rows = []  # Store task-level data
 
     for task in tasks:
         task_id = task.get('task_id', '')
@@ -89,6 +90,20 @@ def get_diversity_report(tasks):
             print('Debugging: ', task_id, pattern)
             sequential_counts[pattern]['count'] += 1
             sequential_counts[pattern]['task_ids'].append(task_id)
+            
+            # Add to task data
+            task_data_rows.append({
+                'Task ID': task_id,
+                'Sequential Call': pattern,
+                'Number of Call': len(tool_names)
+            })
+        else:
+            # Task with no tool calls
+            task_data_rows.append({
+                'Task ID': task_id,
+                'Sequential Call': '',
+                'Number of Call': 0
+            })
 
     # Build DF1: Combined view with Call Type (all sequential)
     df1_rows = []
@@ -122,7 +137,10 @@ def get_diversity_report(tasks):
 
     individual_tool_analysis = pd.DataFrame(df3_rows).reset_index(drop=True)
 
-    return total_tool_analysis, task_specific_tool_analysis, individual_tool_analysis
+    # Build DF4: Task-level data
+    task_data_df = pd.DataFrame(task_data_rows).reset_index(drop=True)
+
+    return total_tool_analysis, task_specific_tool_analysis, individual_tool_analysis, task_data_df
 
 
 def generate_excel_report(csv_file=None, tasks_folder=None, output_excel_file=None):
@@ -196,7 +214,7 @@ def generate_excel_report(csv_file=None, tasks_folder=None, output_excel_file=No
     else:
         raise ValueError("Either csv_file or tasks_folder must be provided")
     
-    all_diversity_report, task_specific_diversity_report, individual_tool_counts_df = get_diversity_report(tasks)
+    all_diversity_report, task_specific_diversity_report, individual_tool_counts_df, task_data_df = get_diversity_report(tasks)
     
     # Calculate summary metrics
     total_tasks = len(tasks)
@@ -229,6 +247,7 @@ def generate_excel_report(csv_file=None, tasks_folder=None, output_excel_file=No
         all_diversity_report.to_excel(writer, sheet_name='Diversity Report', index=False)
         task_specific_diversity_report.to_excel(writer, sheet_name='Task Specific Diversity Report', index=False)
         individual_tool_counts_df.to_excel(writer, sheet_name='Individual Tool Counts', index=False)
+        task_data_df.to_excel(writer, sheet_name='Task Data', index=False)
 
 
 if __name__ == '__main__':
