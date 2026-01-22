@@ -387,7 +387,7 @@ class QualityEvaluator:
         # Whitelist IDs from prompt
         if prompt:
             # Simple alphanumeric ID pattern
-            prompt_ids = re.findall(r'[A-Z0-9]{10,}|[A-Z0-9]+(?:-[A-Z0-9]+)+', prompt)
+            prompt_ids = re.findall(r'[A-Z0-9]{10,}|[A-Z]+-[A-Z0-9]+', prompt)
             known_ids.update(prompt_ids)
         
         for tool in tools:
@@ -396,20 +396,17 @@ class QualityEvaluator:
             args_str = json.dumps(args)
             
             # Find ID patterns
-            id_patterns = re.findall(r'[A-Z0-9]{10,}|[A-Z0-9]+(?:-[A-Z0-9]+)+', args_str)
+            id_patterns = re.findall(r'[A-Z0-9]{10,}|[A-Z]+-[A-Z0-9]+', args_str)
             
             for id_val in id_patterns:
-                # Check if ID is either a full match or a substring of any known full ID
-                is_known = id_val in known_ids
-                is_substring = any(id_val in full_id for full_id in known_ids)
-                if not is_known and not is_substring:
+                if id_val not in known_ids:
                     magic_ids.append(f"ID '{id_val}' used in {tool.get('name')} before retrieval")
             
             # Add IDs from output to known set
             execution_results = tool.get("tool_execution_results") or {}
             result = execution_results.get("result", {})
             result_str = json.dumps(result)
-            found_ids = re.findall(r'[A-Z0-9]{10,}|[A-Z0-9]+(?:-[A-Z0-9]+)+', result_str)
+            found_ids = re.findall(r'"id":\s*"([^"]+)"', result_str)
             known_ids.update(found_ids)
         
         return magic_ids
